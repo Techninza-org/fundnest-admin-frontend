@@ -1,0 +1,17 @@
+// Here you can add other styles
+.services{
+    display: grid;
+    margin-top: 4rem;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 50%;
+    border: 0;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+}
