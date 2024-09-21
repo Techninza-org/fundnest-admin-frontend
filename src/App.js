@@ -12,6 +12,7 @@ import Webinars from './views/pages/services/Webinars'
 import WebinarsBooking from './views/pages/services/WebinarsBooking'
 import FAQs from './views/pages/services/FAQs'
 import Consults from './views/pages/services/Consults'
+import MyCourse from './views/pages/services/MyCourse'
 
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
@@ -62,7 +63,7 @@ const App = () => {
           <Route exact path="/webinarsbooking/all" name="webinar" element={<WebinarsBooking />} />
           <Route exact path="/faqs" name="faqs" element={<FAQs />} />
           <Route exact path="/consult/all" name="consult" element={<Consults/>} />
-
+          <Route exact path="/mycourse/all" name="mycourse" element={<MyCourse/>} />
           <Route path="*" name="Home" element={<DefaultLayout />} />
         </Routes>
       </Suspense>
