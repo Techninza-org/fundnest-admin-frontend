@@ -4,7 +4,6 @@ import { AppSidebar, AppHeader } from '../../../components/index'
 import { MantineReactTable, useMantineReactTable } from 'mantine-react-table'
 import CIcon from '@coreui/icons-react'
 import { cilTrash } from '@coreui/icons'
-const baseUrl = 'http://localhost:4000'
 const Bookings = () => {
   const [bookings, setBookings] = useState([])
 

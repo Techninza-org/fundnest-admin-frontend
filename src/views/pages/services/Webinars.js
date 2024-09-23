@@ -69,6 +69,30 @@ const Webinars = () => {
     fetchVideos()
   }, [])
 
+  const handleDelete = async (id) => {
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) {
+        console.error('Token not found')
+        return
+      }
+  
+      await axios.delete(`${import.meta.env.VITE_BASE_URL}/admin/delete-webinar/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      console.log("deleted card")
+      
+      // Immediately update the videos state to remove the deleted video
+      setVideos(videos.filter((video) => video._id !== id)) // Use _id or whatever identifier you use
+  
+      setMessage('Video deleted successfully')
+    } catch (err) {
+      console.error('Error deleting video:', err)
+      setMessage('Error deleting video')
+    }
+  }
   return (
     <>
       <AppSidebar />
@@ -136,6 +160,12 @@ const Webinars = () => {
                       <p>{video.description}</p>
                       <p>Cost: {video.cost}</p>
                     </div>
+                    <button
+                          className="btn btn-danger"
+                          onClick={() => handleDelete(video._id)}
+                        >
+                          Delete
+                        </button>
                   </div>
                 ))}
             </div>

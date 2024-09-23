@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import axios from 'axios'
-const baseUrl = 'http://localhost:4000'
+// const baseUrl = 'http://localhost:4000'
 import { AppHeader, AppSidebar } from '../../../components'
 import { MantineReactTable, useMantineReactTable } from 'mantine-react-table'
 import CIcon from '@coreui/icons-react'
@@ -116,7 +116,9 @@ export default function Consults() {
           },
         },
       )
+      setConsult(consult.filter((consult) => consult._id !== id)) 
 
+      setMessage('Video deleted successfully')
       console.log(response.data.message)
       // window.location.reload()
     } catch (error) {
@@ -170,6 +172,7 @@ export default function Consults() {
           <div className="mt-1 mx-3">
             <h1>Add Consults</h1>
             <form onSubmit={onSubmit}>
+            <label className="form-label mt-3">Select Image</label>
               <input className="form-control" type="file" name="image" onChange={onFileChange} />
               <input
                 className="form-control mt-3"

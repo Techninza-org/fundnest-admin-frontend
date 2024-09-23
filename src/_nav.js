@@ -36,7 +36,7 @@ const _nav = [
 
   {
     component: CNavItem,
-    name: 'Consults',
+    name: 'Consultants',
     to: '/consult/all',
     icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
   },
