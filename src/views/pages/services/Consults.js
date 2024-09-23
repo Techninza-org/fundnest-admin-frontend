@@ -52,14 +52,16 @@ export default function Consults() {
         return
       }
 
-      const res = await axios.post(`${baseUrl}/consult/createConsult`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          // Important: Let axios set the Content-Type for multipart/form-data automatically
-          
-          
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/consult/createConsult`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // Important: Let axios set the Content-Type for multipart/form-data automatically
+          },
         },
-      })
+      )
 
       setMessage('File uploaded: ' + res.data.fileName)
       window.location.reload() // Optional: Reload after successful upload
@@ -82,7 +84,7 @@ export default function Consults() {
           console.error('Token not found')
           return
         }
-        const response = await axios.get(`${baseUrl}/consult/getConsultall`, {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/consult/getConsultall`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -107,7 +109,7 @@ export default function Consults() {
 
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/admin/deleteAppointment/${id}`,
+        `${import.meta.env.VITE_BASE_URL}/admin/delete-consult/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -116,7 +118,7 @@ export default function Consults() {
       )
 
       console.log(response.data.message)
-      window.location.reload()
+      // window.location.reload()
     } catch (error) {
       console.error('Error deleting:', error)
     }

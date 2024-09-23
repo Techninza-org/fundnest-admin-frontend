@@ -19,11 +19,14 @@ const Entrepreneur = () => {
           console.error('Token not found')
           return
         }
-        const response = await axios.get(`${baseUrl}/admin/getentrepreneurs`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/admin/getentrepreneurs`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        })
+        )
         // console.log(response.data);
         setEntrepreneurs(response.data)
       } catch (err) {
@@ -42,7 +45,7 @@ const Entrepreneur = () => {
     }
 
     try {
-      const response = await axios.delete(`${baseUrl}/admin/deleteEI/${id}`, {
+      const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/admin/deleteEI/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

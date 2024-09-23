@@ -16,7 +16,7 @@ const Bookings = () => {
           console.error('Token not found')
           return
         }
-        const response = await axios.get(`${baseUrl}/admin/getAppointments`, {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getAppointments`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

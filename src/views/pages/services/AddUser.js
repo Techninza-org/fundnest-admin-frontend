@@ -28,7 +28,7 @@ const UserForm = () => {
         console.error('Token not found')
         return
       }
-      const response = await axios.post(`${baseUrl}/admin/eiuser`, formData, {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/eiuser`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

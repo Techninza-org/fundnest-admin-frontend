@@ -38,12 +38,16 @@ const MyCourse = () => {
         console.error('Token not found')
         return
       }
-      const res = await axios.post(`${baseUrl}/videos/create-courses`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/videos/create-courses`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
         },
-      })
+      )
       console.log(res)
       setMessage('File uploaded successfully')
       window.location.reload() // Refresh page after upload
@@ -60,25 +64,24 @@ const MyCourse = () => {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token')
         if (!token) {
-          console.error('Token not found');
-          return;
+          console.error('Token not found')
+          return
         }
-        const res = await axios.get(`${baseUrl}/videos/get-courses`, {
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/videos/get-courses`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        });
-        setVideos(res.data.courses); // Update to use res.data.courses
+        })
+        setVideos(res.data.courses) // Update to use res.data.courses
       } catch (err) {
-        console.error(err);
+        console.error(err)
       }
-    };
-  
-    fetchVideos();
-  }, []);
-  
+    }
+
+    fetchVideos()
+  }, [])
 
   return (
     <>
@@ -148,11 +151,10 @@ const MyCourse = () => {
             <div className="row">
               {videos &&
                 videos.map((video, index) => (
-                 
                   <div className="col-md-4 mt-5" key={index}>
                     <div className="card">
                       <img
-                       src={`${baseUrl}${video.thumnailUrl}`}
+                        src={`${baseUrl}${video.thumnailUrl}`}
                         alt="Thumbnail"
                         className="card-img-top"
                         style={{ height: '200px', objectFit: 'cover' }}
@@ -161,17 +163,15 @@ const MyCourse = () => {
                         <h5 className="card-title">{video.title}</h5>
                         <p className="card-text">{video.description}</p>
                         <p>Cost: ${video.cost}</p>
-                        
+
                         {/* <video width="320" height="240" controls>
                           <source src={video.url} type="video/mp4" />
                           Your browser does not support the video tag.
                         </video> */}
                       </div>
                     </div>
-
                   </div>
                 ))}
-
             </div>
           </div>
         </div>

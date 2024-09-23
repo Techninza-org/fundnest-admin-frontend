@@ -31,7 +31,7 @@ const Webinars = () => {
         console.error('Token not found')
         return
       }
-      const res = await axios.post(`${baseUrl}/videos/upload`, formData, {
+      const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/videos/upload`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -55,7 +55,7 @@ const Webinars = () => {
           console.error('Token not found')
           return
         }
-        const res = await axios.get(`${baseUrl}/videos/get-uploads`, {
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/videos/get-uploads`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

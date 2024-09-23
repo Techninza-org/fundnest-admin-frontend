@@ -16,11 +16,14 @@ const Bookings = () => {
           console.error('Token not found')
           return
         }
-        const response = await axios.get(`${baseUrl}/admin/getWebinarBooking`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/admin/getWebinarBooking`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        })
+        )
         // console.log(response.data, "fghj");
         setBookings(response.data)
       } catch (err) {

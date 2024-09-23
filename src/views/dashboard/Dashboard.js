@@ -27,7 +27,7 @@ const Dashboard = () => {
       const user = localStorage.getItem('user')
       const token = localStorage.getItem('token')
       async function getentrepreneurs() {
-        const res = await axios.get(`${baseUrl}/admin/getentrepreneurs`, {
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getentrepreneurs`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -35,7 +35,7 @@ const Dashboard = () => {
         setentrepreneurCount(res.data.length)
       }
       async function getInvestors() {
-        const res = await axios.get(`${baseUrl}/admin/getInvestors`, {
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getInvestors`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -43,7 +43,7 @@ const Dashboard = () => {
         setInvestorCount(res.data.length)
       }
       async function getBookings() {
-        const res = await axios.get(`${baseUrl}/admin/getAppointments`, {
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getAppointments`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -51,7 +51,7 @@ const Dashboard = () => {
         setBookingCount(res.data.length)
       }
       async function getWebinars() {
-        const res = await axios.get(`${baseUrl}/videos/upload`, {
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/videos/upload`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -59,7 +59,7 @@ const Dashboard = () => {
         setWebinarCount(res.data.length)
       }
       async function getWebinarsBooking() {
-        const res = await axios.get(`${baseUrl}/admin/getWebinarBooking`, {
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getWebinarBooking`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -67,7 +67,7 @@ const Dashboard = () => {
         setWebinarBookingCount(res.data.length)
       }
       async function getFAQs() {
-        const res = await axios.get(`${baseUrl}/admin/faqs`, {
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/faqs`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

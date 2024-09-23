@@ -28,7 +28,7 @@ const Login = () => {
         username: username,
         password: password,
       }
-      const response = await axios.post(`http://localhost:4000/admin/login`, creds)
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/login`, creds)
 
       localStorage.setItem('user', JSON.stringify(response.data.user))
       localStorage.setItem('token', response.data.token)

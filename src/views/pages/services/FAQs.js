@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { AppSidebar, AppHeader } from '../../../components/index'
+
 const baseUrl = 'http://localhost:4000'
 
 const FAQs = () => {
   const [faqs, setFaqs] = useState([])
   const [question, setQuestion] = useState('')
   const [answer, setAnswer] = useState('')
+  const [thumbnail, setThumbnail] = useState(null)
+
+  // Handle thumbnail file selection
+  const onThumbnailChange = (e) => {
+    setThumbnail(e.target.files[0])
+  }
 
   useEffect(() => {
     const fetchFaqs = async () => {
@@ -16,7 +23,7 @@ const FAQs = () => {
           console.error('Token not found')
           return
         }
-        const res = await axios.get(`${baseUrl}/admin/faqs`, {
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/faqs`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -38,19 +45,27 @@ const FAQs = () => {
         console.error('Token not found')
         return
       }
-      const res = await axios.post(
-        `${baseUrl}/admin/faqs`,
-        { question, answer },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+
+      // Create a FormData object to handle file uploads
+      const formData = new FormData()
+      formData.append('question', question)
+      formData.append('answer', answer)
+      if (thumbnail) {
+        formData.append('thumbnail', thumbnail) // Append the image file
+      }
+
+      const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/faqs`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data', // This header is needed for file uploads
         },
-      )
+      })
+
+      // Update FAQs state with the newly added FAQ
       setFaqs([...faqs, res.data])
       setQuestion('')
       setAnswer('')
-      window.location.reload()
+      setThumbnail(null) // Reset the thumbnail state after submission
     } catch (err) {
       console.error(err)
     }
@@ -89,13 +104,30 @@ const FAQs = () => {
                   onChange={(e) => setAnswer(e.target.value)}
                   required
                 />
+
+                <div>
+                  <label className="form-label mt-3">Select Thumbnail Image</label>
+                  <input
+                    className="form-control"
+                    type="file"
+                    name="thumbnail"
+                    onChange={onThumbnailChange}
+                  />
+                  {!thumbnail && (
+                    <small className="form-text text-muted">
+                      Please select a thumbnail image to upload
+                    </small>
+                  )}
+                </div>
               </div>
+
               <div className="mt-5">
                 <button type="submit" className="btn btn-primary">
                   Submit
                 </button>
               </div>
             </form>
+
             <div className="mt-5">
               <h1>All FAQs</h1>
               <div className="row">
@@ -105,6 +137,14 @@ const FAQs = () => {
                       <div className="card-body">
                         <h5 className="card-title">Question: {faq.question}</h5>
                         <p className="card-text">Answer: {faq.answer}</p>
+                        {faq.thumbnail && (
+                          <img
+                            src={`${baseUrl}/uploads/${faq.thumbnail}`}
+                            alt="FAQ Thumbnail"
+                            className="img-fluid"
+                            style={{ maxHeight: '200px' }}
+                          />
+                        )}
                       </div>
                     </div>
                   </div>
