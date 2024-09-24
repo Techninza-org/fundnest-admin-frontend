@@ -1,9 +1,9 @@
 {
-  "name": "ezio",
+  "name": "fundnest",
   "version": "1.0.0",
-  "description": "Ezio Admin Panel",
+  "description": " Fundnest Admin Panel",
   "homepage": ".",
-  "author": "kashish",
+  "author": "satish",
   "scripts": {
     "build": "vite build",
     "lint": "eslint \"src/**/*.js\"",

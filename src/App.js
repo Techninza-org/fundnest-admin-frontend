@@ -61,7 +61,7 @@ const App = () => {
           <Route exact path="/adduser" name="user" element={<AddUser />} />
           <Route exact path="/webinars/upload" name="webinar" element={<Webinars />} />
           <Route exact path="/webinarsbooking/all" name="webinar" element={<WebinarsBooking />} />
-          <Route exact path="/faqs" name="faqs" element={<FAQs />} />
+          <Route exact path="/blog" name="faqs" element={<FAQs />} />
           <Route exact path="/consult/all" name="consult" element={<Consults/>} />
           <Route exact path="/mycourse/all" name="mycourse" element={<MyCourse/>} />
           <Route path="*" name="Home" element={<DefaultLayout />} />

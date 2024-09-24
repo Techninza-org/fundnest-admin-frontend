@@ -27,6 +27,7 @@ const Webinars = () => {
 
     try {
       const token = localStorage.getItem('token')
+      console.log(token)
       if (!token) {
         console.error('Token not found')
         return
@@ -61,6 +62,7 @@ const Webinars = () => {
           },
         })
         setVideos(res.data)
+        console.log("video data",res.data)
       } catch (err) {
         console.error(err)
       }

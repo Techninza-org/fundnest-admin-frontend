@@ -104,7 +104,7 @@ const FAQs = () => {
         {message && <div className="alert alert-info">{message}</div>}
         <div className="body flex-grow-1">
           <div className="mt-1 mx-3">
-            <h1>Create FAQs</h1>
+            <h1>Create Blog</h1>
             <form className="needs-validation" noValidate onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="question">Blog Title:</label>
@@ -154,7 +154,7 @@ const FAQs = () => {
             </form>
 
             <div className="mt-5">
-              <h1>All FAQs</h1>
+              <h1>All Blog Post</h1>
               <div className="row">
                 {faqs.map((faq, index) => (
                   <div key={index} className="col-12 mb-3">
