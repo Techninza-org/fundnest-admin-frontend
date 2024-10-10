@@ -11,36 +11,60 @@ const FAQs = () => {
   const [thumbnail, setThumbnail] = useState(null);
   const [message, setMessage] = useState('');
 
+  // New fields for meta data
+  const [metaTitle, setMetaTitle] = useState('');
+  const [metaDiscription, setMetaDiscription] = useState('');
+  const [metaKeywords, setMetaKeywords] = useState('');
+
+  const [formErrors, setFormErrors] = useState({}); // Store form errors
+
   // Handle thumbnail file selection
   const onThumbnailChange = (e) => {
     setThumbnail(e.target.files[0]);
   };
 
   useEffect(() => {
-    const fetchFaqs = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          console.error('Token not found');
-          return;
-        }
-        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/blog`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        // Ensure the response is treated as an array
-        setFaqs(Array.isArray(res.data) ? res.data : []);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
     fetchFaqs();
   }, []);
 
+  const fetchFaqs = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('Token not found');
+        return;
+      }
+      const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/blog`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setFaqs(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Form validation logic
+  const validateForm = () => {
+    const errors = {};
+    if (!question.trim()) errors.question = 'Blog title is required';
+    if (!answer.trim()) errors.answer = 'Blog description is required';
+    if (!metaTitle.trim()) errors.metaTitle = 'Meta title is required';
+    if (!metaDiscription.trim()) errors.metaDiscription = 'Meta description is required';
+    if (!metaKeywords.trim()) errors.metaKeywords = 'Meta keywords are required';
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return; // Stop if validation fails
+    }
+
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -51,6 +75,9 @@ const FAQs = () => {
       const formData = new FormData();
       formData.append('question', question);
       formData.append('answer', answer);
+      formData.append('metaTitle', metaTitle);
+      formData.append('metaDiscription', metaDiscription);
+      formData.append('metaKeywords', metaKeywords);
       if (thumbnail) {
         formData.append('thumbnail', thumbnail);
       }
@@ -62,13 +89,21 @@ const FAQs = () => {
         },
       });
 
-      // Update FAQs state with the newly added FAQ
-      setFaqs((prevFaqs) => [...prevFaqs, res.data]);
+      // Reset form fields after successful submission
       setQuestion('');
       setAnswer('');
+      setMetaTitle('');
+      setMetaDiscription('');
+      setMetaKeywords('');
       setThumbnail(null);
+      setFormErrors({}); // Clear errors after successful submission
+      setMessage('Blog post created successfully!');
+
+      // Fetch FAQs again after posting
+      fetchFaqs();
     } catch (err) {
       console.error(err);
+      setMessage('Error creating blog post');
     }
   };
 
@@ -85,7 +120,7 @@ const FAQs = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("Deleted card");
+      console.log('Deleted card');
 
       // Update the FAQs state to remove the deleted FAQ
       setFaqs((prevFaqs) => prevFaqs.filter((faq) => faq._id !== id));
@@ -110,25 +145,27 @@ const FAQs = () => {
                 <label htmlFor="question">Blog Title:</label>
                 <input
                   type="text"
-                  className="form-control"
+                  className={`form-control ${formErrors.question ? 'is-invalid' : ''}`}
                   id="question"
                   name="question"
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
                   required
                 />
+                {formErrors.question && <div className="invalid-feedback">{formErrors.question}</div>}
               </div>
 
               <div className="form-group mt-3">
                 <label htmlFor="answer">Blog Description:</label>
                 <textarea
-                  className="form-control"
+                  className={`form-control ${formErrors.answer ? 'is-invalid' : ''}`}
                   id="answer"
                   name="answer"
                   value={answer}
                   onChange={(e) => setAnswer(e.target.value)}
                   required
                 ></textarea>
+                {formErrors.answer && <div className="invalid-feedback">{formErrors.answer}</div>}
 
                 <div>
                   <label className="form-label mt-3">Select Thumbnail Image</label>
@@ -146,6 +183,48 @@ const FAQs = () => {
                 </div>
               </div>
 
+              {/* Meta fields */}
+              <div className="form-group mt-3">
+                <label htmlFor="metaTitle">Meta Title:</label>
+                <input
+                  type="text"
+                  className={`form-control ${formErrors.metaTitle ? 'is-invalid' : ''}`}
+                  id="metaTitle"
+                  name="metaTitle"
+                  value={metaTitle}
+                  onChange={(e) => setMetaTitle(e.target.value)}
+                  required
+                />
+                {formErrors.metaTitle && <div className="invalid-feedback">{formErrors.metaTitle}</div>}
+              </div>
+
+              <div className="form-group mt-3">
+                <label htmlFor="metaDiscription">Meta Description:</label>
+                <textarea
+                  className={`form-control ${formErrors.metaDiscription ? 'is-invalid' : ''}`}
+                  id="metaDiscription"
+                  name="metaDiscription"
+                  value={metaDiscription}
+                  onChange={(e) => setMetaDiscription(e.target.value)}
+                  required
+                ></textarea>
+                {formErrors.metaDiscription && <div className="invalid-feedback">{formErrors.metaDiscription}</div>}
+              </div>
+
+              <div className="form-group mt-3">
+                <label htmlFor="metaKeywords">Meta Keywords:</label>
+                <input
+                  type="text"
+                  className={`form-control ${formErrors.metaKeywords ? 'is-invalid' : ''}`}
+                  id="metaKeywords"
+                  name="metaKeywords"
+                  value={metaKeywords}
+                  onChange={(e) => setMetaKeywords(e.target.value)}
+                  required
+                />
+                {formErrors.metaKeywords && <div className="invalid-feedback">{formErrors.metaKeywords}</div>}
+              </div>
+
               <div className="mt-5">
                 <button type="submit" className="btn btn-primary">
                   Submit
@@ -154,7 +233,7 @@ const FAQs = () => {
             </form>
 
             <div className="mt-5">
-              <h1>All Blog Post</h1>
+              <h1>All Blog Posts</h1>
               <div className="row">
                 {faqs.map((faq, index) => (
                   <div key={index} className="col-12 mb-3">
@@ -164,6 +243,9 @@ const FAQs = () => {
                           <div className="card-body">
                             <h5 className="card-title">Blog Title: {faq.question}</h5>
                             <p className="card-text">Blog Description: {faq.answer}</p>
+                            <p className="card-text">Meta Title: {faq.metaTitle}</p>
+                            <p className="card-text">Meta Description: {faq.metaDiscription}</p>
+                            <p className="card-text">Meta Keywords: {faq.metaKeywords}</p>
                             {faq.thumbnail && (
                               <img
                                 src={`${baseUrl}/uploads/${faq.thumbnail}`}
