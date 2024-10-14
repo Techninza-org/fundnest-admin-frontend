@@ -15,6 +15,7 @@ import Consults from './views/pages/services/Consults'
 import MyCourse from './views/pages/services/MyCourse'
 import PriceSet from './views/pages/services/PriceSet'
 import Services from './views/pages/services/Services'
+import Inquiry from './views/pages/services/Inquiry'
 
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
@@ -64,7 +65,8 @@ const App = () => {
           <Route exact path="/webinars/upload" name="webinar" element={<Webinars />} />
           <Route exact path="/priceset" name="Services" element={<PriceSet />} />
           <Route exact path="/webinarsbooking/all" name="webinar" element={<WebinarsBooking />} />
-          <Route exact path="/blog" name="faqs" element={<FAQs />} />
+          <Route exact path="/blog" name="blog" element={<FAQs />} />
+          <Route exact path="/inquiry" name="inquiry" element={< Inquiry/>} />
           <Route exact path="/consult/all" name="consult" element={<Consults/>} />
           <Route exact path="/mycourse/all" name="mycourse" element={<MyCourse/>} />
           <Route exact path="/services" name="Services" element={<Services/>} />

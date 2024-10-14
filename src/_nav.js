@@ -82,6 +82,12 @@ const _nav = [
     to: '/blog',
     icon: <CIcon icon={cilCommentSquare} customClassName="nav-icon" />,
   },
+  {
+    component: CNavItem,
+    name: 'Inquiry',
+    to: '/inquiry',
+    icon: <CIcon icon={cilCommentSquare} customClassName="nav-icon" />,
+  },
 ]
 
 export default _nav

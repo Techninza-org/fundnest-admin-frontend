@@ -8,7 +8,7 @@ const Services = () => {
   const [description, setDescription] = useState('');
   const [cost, setCost] = useState('');
   const [message, setMessage] = useState('');
-  const [videos, setVideos] = useState([]);
+  const [services, setservices] = useState([]);
 
   // Handle thumbnail file selection
   const onThumbnailChange = (e) => {
@@ -19,10 +19,10 @@ const Services = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append('thumbnail', thumbnail);
-    formData.append('title', title);
-    formData.append('description', description);
-    formData.append('cost', cost);
+    formData.append('image', thumbnail);
+    formData.append('tittle', title);
+    formData.append('discription', description);
+    formData.append('price', cost);
 
     try {
       const token = localStorage.getItem('token');
@@ -31,7 +31,7 @@ const Services = () => {
         return;
       }
       const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/videos/create-services`, // Adjusted endpoint
+        `${import.meta.env.VITE_BASE_URL}/consult/set-service`, // Adjusted endpoint
         formData,
         {
           headers: {
@@ -42,7 +42,16 @@ const Services = () => {
       );
       console.log(res);
       setMessage('Service uploaded successfully');
-      window.location.reload(); // Refresh page after upload
+      // Reset form fields after successful submission
+      setThumbnail(null);
+      setTitle('');
+      setDescription('');
+      setCost('');
+      
+      // Fetch services again after posting
+      fetchservices();
+    
+      
     } catch (err) {
       if (err.response.status === 400) {
         setMessage('No thumbnail selected');
@@ -52,28 +61,29 @@ const Services = () => {
     }
   };
 
-  // Fetch uploaded videos (now services)
-  useEffect(() => {
-    const fetchVideos = async () => {
+  // Fetch uploaded services (now services)
+
+    const fetchservices = async () => {
       try {
         const token = localStorage.getItem('token');
         if (!token) {
           console.error('Token not found');
           return;
         }
-        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/videos/get-services`, {
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/consult/get-services`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setVideos(res.data.services); // Changed to services
+        console.log(res,"my")
+        setservices(res.data.services); // Changed to services
         console.log("service data", res.data.services); // Changed to services
       } catch (err) {
         console.error(err);
       }
     };
-
-    fetchVideos();
+    useEffect(() => {
+    fetchservices();
   }, []);
 
   // Handle service delete
@@ -85,15 +95,15 @@ const Services = () => {
         return;
       }
 
-      await axios.delete(`${import.meta.env.VITE_BASE_URL}/admin/deleteService/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_BASE_URL}/consult/delete-service/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       console.log("deleted card");
 
-      // Immediately update the videos state to remove the deleted service
-      setVideos(videos.filter((video) => video._id !== id)); // Use _id or whatever identifier you use
+      // Immediately update the services state to remove the deleted service
+      setservices(services.filter((service) => service._id !== id)); // Use _id or whatever identifier you use
 
       setMessage('Service deleted successfully'); // Changed to services
     } catch (err) {
@@ -158,26 +168,26 @@ const Services = () => {
 
             <h1>Uploaded Services</h1> {/* Changed to Services */}
             <div className="row">
-              {videos &&
-                videos.map((video, index) => (
+              {services &&
+                services.map((service, index) => (
                   <div className="col-md-4 mt-5" key={index}>
                     <div className="card">
                       <img
-                        src={`${import.meta.env.VITE_BASE_URL}${video.thumnailUrl}`}
-                        alt="Thumbnail"
+                        src={service.image}
+                        alt="image"
                         className="card-img-top"
                         style={{ height: '200px', objectFit: 'cover' }}
                       />
                       <div className="card-body">
-                        <h5 className="card-title">{video.title}</h5>
-                        <p className="card-text">{video.description}</p>
-                        <p>Cost: ${video.cost}</p>
+                        <h5 className="card-title">{service.tittle}</h5>
+                        <p className="card-text">{service.discription}</p>
+                        <p>Cost: ${service.price}</p>
                         <button
                           className="btn btn-danger"
-                          onClick={() => handleDelete(video._id)}
+                          onClick={() => handleDelete(service._id)}
                         >
                           Delete
-                        </button>
+                        </button> 
                       </div>
                     </div>
                   </div>
