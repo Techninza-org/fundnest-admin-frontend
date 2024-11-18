@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { AppSidebar, AppHeader } from '../../../components/index';
+import { Modal, Button } from 'react-bootstrap';
 
 const baseUrl = 'http://localhost:4000';
 
@@ -17,6 +18,17 @@ const FAQs = () => {
   const [metaKeywords, setMetaKeywords] = useState('');
 
   const [formErrors, setFormErrors] = useState({}); // Store form errors
+
+  // Modal state
+  const [showModal, setShowModal] = useState(false);
+  const [currentFaqId, setCurrentFaqId] = useState(null);
+
+  // Handle modal inputs
+  const [modalQuestion, setModalQuestion] = useState('');
+  const [modalAnswer, setModalAnswer] = useState('');
+  const [modalMetaTitle, setModalMetaTitle] = useState('');
+  const [modalMetaDiscription, setModalMetaDiscription] = useState('');
+  const [modalMetaKeywords, setModalMetaKeywords] = useState('');
 
   // Handle thumbnail file selection
   const onThumbnailChange = (e) => {
@@ -106,6 +118,87 @@ const FAQs = () => {
       setMessage('Error creating blog post');
     }
   };
+
+
+
+
+
+
+
+
+
+
+// Open modal with pre-filled values
+const handleEdit = (faq) => {
+  setModalQuestion(faq.question);
+  setModalAnswer(faq.answer);
+  setModalMetaTitle(faq.metaTitle);
+  setModalMetaDiscription(faq.metaDiscription);
+  setModalMetaKeywords(faq.metaKeywords);
+  setCurrentFaqId(faq._id);
+  setShowModal(true);
+};
+
+const handleCloseModal = () => setShowModal(false);
+
+
+
+const handleUpdate = async (e) => {
+  e.preventDefault();
+
+
+
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Token not found');
+      return;
+    }
+
+    const updatedData = {
+      question: modalQuestion,
+      answer: modalAnswer,
+      metaTitle: modalMetaTitle,
+      metaDescription: modalMetaDiscription,
+      metaKeywords: modalMetaKeywords,
+    };
+
+    const res = await axios.put(
+      `${import.meta.env.VITE_BASE_URL}/admin/editBlog/${currentFaqId}`,
+      updatedData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    // Fetch FAQs again after updating
+    fetchFaqs();
+    setMessage('Blog post updated successfully!');
+    handleCloseModal();
+  } catch (err) {
+    console.error(err);
+    setMessage('Error updating blog post');
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const handleDelete = async (id) => {
     try {
@@ -256,7 +349,10 @@ const FAQs = () => {
                             )}
                           </div>
                         </div>
-                        <div className="col-auto d-flex align-items-center">
+                        <div className="col-auto d-flex align-items-center gap-2">
+                          <button className="btn btn-primary" onClick={() => handleEdit(faq)}>
+                            Edit
+                          </button>
                           <button className="btn btn-danger" onClick={() => handleDelete(faq._id)}>
                             Delete
                           </button>
@@ -270,6 +366,79 @@ const FAQs = () => {
           </div>
         </div>
       </div>
+         {/* Modal for editing blog post */}
+         <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Blog Post</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form onSubmit={handleUpdate}>
+            <div className="form-group">
+              <label htmlFor="modalQuestion">Blog Title:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="modalQuestion"
+                value={modalQuestion}
+                onChange={(e) => setModalQuestion(e.target.value)}
+                required
+              />
+              {formErrors.question && <div className="invalid-feedback">{formErrors.question}</div>}
+            </div>
+
+            <div className="form-group mt-3">
+              <label htmlFor="modalAnswer">Blog Description:</label>
+              <textarea
+                className="form-control"
+                id="modalAnswer"
+                value={modalAnswer}
+                onChange={(e) => setModalAnswer(e.target.value)}
+                required
+              />
+              {formErrors.answer && <div className="invalid-feedback">{formErrors.answer}</div>}
+            </div>
+
+            <div className="form-group mt-3">
+              <label htmlFor="modalMetaTitle">Meta Title:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="modalMetaTitle"
+                value={modalMetaTitle}
+                onChange={(e) => setModalMetaTitle(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="form-group mt-3">
+              <label htmlFor="modalMetaDiscription">Meta Description:</label>
+              <textarea
+                className="form-control"
+                id="modalMetaDiscription"
+                value={modalMetaDiscription}
+                onChange={(e) => setModalMetaDiscription(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="form-group mt-3">
+              <label htmlFor="modalMetaKeywords">Meta Keywords:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="modalMetaKeywords"
+                value={modalMetaKeywords}
+                onChange={(e) => setModalMetaKeywords(e.target.value)}
+                required
+              />
+            </div>
+
+            <Button type="submit" className="btn btn-primary mt-3">
+              Update Blog
+            </Button>
+          </form>
+        </Modal.Body>
+      </Modal>
     </>
   );
 };
