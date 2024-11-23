@@ -1,97 +1,100 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { AppSidebar, AppHeader } from '../../../components/index';
-import { Modal, Button } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import { AppSidebar, AppHeader } from '../../../components/index'
+import { Modal, Button } from 'react-bootstrap'
+import MarkdownEditor from '@uiw/react-markdown-editor'
+import Markdown from 'markdown-to-jsx'
 
-const baseUrl = 'http://localhost:4000';
+const baseUrl = 'http://localhost:4000'
 
 const FAQs = () => {
-  const [faqs, setFaqs] = useState([]);
-  const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
-  const [thumbnail, setThumbnail] = useState(null);
-  const [message, setMessage] = useState('');
+  // const [content, setContent] = useState('');
+  const [faqs, setFaqs] = useState([])
+  const [question, setQuestion] = useState('')
+  const [answer, setAnswer] = useState('')
+  const [thumbnail, setThumbnail] = useState(null)
+  const [message, setMessage] = useState('')
 
   // New fields for meta data
-  const [metaTitle, setMetaTitle] = useState('');
-  const [metaDiscription, setMetaDiscription] = useState('');
-  const [metaKeywords, setMetaKeywords] = useState('');
+  const [metaTitle, setMetaTitle] = useState('')
+  const [metaDiscription, setMetaDiscription] = useState('')
+  const [metaKeywords, setMetaKeywords] = useState('')
 
-  const [formErrors, setFormErrors] = useState({}); // Store form errors
+  const [formErrors, setFormErrors] = useState({}) // Store form errors
 
   // Modal state
-  const [showModal, setShowModal] = useState(false);
-  const [currentFaqId, setCurrentFaqId] = useState(null);
+  const [showModal, setShowModal] = useState(false)
+  const [currentFaqId, setCurrentFaqId] = useState(null)
 
   // Handle modal inputs
-  const [modalQuestion, setModalQuestion] = useState('');
-  const [modalAnswer, setModalAnswer] = useState('');
-  const [modalMetaTitle, setModalMetaTitle] = useState('');
-  const [modalMetaDiscription, setModalMetaDiscription] = useState('');
-  const [modalMetaKeywords, setModalMetaKeywords] = useState('');
+  const [modalQuestion, setModalQuestion] = useState('')
+  const [modalAnswer, setModalAnswer] = useState('')
+  const [modalMetaTitle, setModalMetaTitle] = useState('')
+  const [modalMetaDiscription, setModalMetaDiscription] = useState('')
+  const [modalMetaKeywords, setModalMetaKeywords] = useState('')
 
   // Handle thumbnail file selection
   const onThumbnailChange = (e) => {
-    setThumbnail(e.target.files[0]);
-  };
+    setThumbnail(e.target.files[0])
+  }
 
   useEffect(() => {
-    fetchFaqs();
-  }, []);
+    fetchFaqs()
+  }, [])
 
   const fetchFaqs = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token')
       if (!token) {
-        console.error('Token not found');
-        return;
+        console.error('Token not found')
+        return
       }
       const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/blog`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
-      setFaqs(Array.isArray(res.data) ? res.data : []);
+      })
+      setFaqs(Array.isArray(res.data) ? res.data : [])
     } catch (err) {
-      console.error(err);
+      console.error(err)
     }
-  };
+  }
 
   // Form validation logic
   const validateForm = () => {
-    const errors = {};
-    if (!question.trim()) errors.question = 'Blog title is required';
-    if (!answer.trim()) errors.answer = 'Blog description is required';
-    if (!metaTitle.trim()) errors.metaTitle = 'Meta title is required';
-    if (!metaDiscription.trim()) errors.metaDiscription = 'Meta description is required';
-    if (!metaKeywords.trim()) errors.metaKeywords = 'Meta keywords are required';
+    const errors = {}
+    if (!question.trim()) errors.question = 'Blog title is required'
+    if (!answer.trim()) errors.answer = 'Blog description is required'
+    if (!metaTitle.trim()) errors.metaTitle = 'Meta title is required'
+    if (!metaDiscription.trim()) errors.metaDiscription = 'Meta description is required'
+    if (!metaKeywords.trim()) errors.metaKeywords = 'Meta keywords are required'
 
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
+    setFormErrors(errors)
+    return Object.keys(errors).length === 0
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (!validateForm()) {
-      return; // Stop if validation fails
+      return // Stop if validation fails
     }
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token')
       if (!token) {
-        console.error('Token not found');
-        return;
+        console.error('Token not found')
+        return
       }
 
-      const formData = new FormData();
-      formData.append('question', question);
-      formData.append('answer', answer);
-      formData.append('metaTitle', metaTitle);
-      formData.append('metaDiscription', metaDiscription);
-      formData.append('metaKeywords', metaKeywords);
+      const formData = new FormData()
+      formData.append('question', question)
+      formData.append('answer', description)
+      formData.append('metaTitle', metaTitle)
+      formData.append('metaDiscription', metaDiscription)
+      formData.append('metaKeywords', metaKeywords)
       if (thumbnail) {
-        formData.append('thumbnail', thumbnail);
+        formData.append('thumbnail', thumbnail)
       }
 
       const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/faqs`, formData, {
@@ -99,130 +102,101 @@ const FAQs = () => {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
-      });
+      })
 
       // Reset form fields after successful submission
-      setQuestion('');
-      setAnswer('');
-      setMetaTitle('');
-      setMetaDiscription('');
-      setMetaKeywords('');
-      setThumbnail(null);
-      setFormErrors({}); // Clear errors after successful submission
-      setMessage('Blog post created successfully!');
+      setQuestion('')
+      setAnswer('')
+      setMetaTitle('')
+      setMetaDiscription('')
+      setMetaKeywords('')
+      setThumbnail(null)
+      setFormErrors({}) // Clear errors after successful submission
+      setMessage('Blog post created successfully!')
 
       // Fetch FAQs again after posting
-      fetchFaqs();
+      fetchFaqs()
     } catch (err) {
-      console.error(err);
-      setMessage('Error creating blog post');
+      console.error(err)
+      setMessage('Error creating blog post')
     }
-  };
-
-
-
-
-
-
-
-
-
-
-// Open modal with pre-filled values
-const handleEdit = (faq) => {
-  setModalQuestion(faq.question);
-  setModalAnswer(faq.answer);
-  setModalMetaTitle(faq.metaTitle);
-  setModalMetaDiscription(faq.metaDiscription);
-  setModalMetaKeywords(faq.metaKeywords);
-  setCurrentFaqId(faq._id);
-  setShowModal(true);
-};
-
-const handleCloseModal = () => setShowModal(false);
-
-
-
-const handleUpdate = async (e) => {
-  e.preventDefault();
-
-
-
-  try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.error('Token not found');
-      return;
-    }
-
-    const updatedData = {
-      question: modalQuestion,
-      answer: modalAnswer,
-      metaTitle: modalMetaTitle,
-      metaDescription: modalMetaDiscription,
-      metaKeywords: modalMetaKeywords,
-    };
-
-    const res = await axios.put(
-      `${import.meta.env.VITE_BASE_URL}/admin/editBlog/${currentFaqId}`,
-      updatedData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    // Fetch FAQs again after updating
-    fetchFaqs();
-    setMessage('Blog post updated successfully!');
-    handleCloseModal();
-  } catch (err) {
-    console.error(err);
-    setMessage('Error updating blog post');
   }
-};
 
+  // Open modal with pre-filled values
+  const handleEdit = (faq) => {
+    setModalQuestion(faq.question)
+    setModalAnswer(faq.answer)
+    setModalMetaTitle(faq.metaTitle)
+    setModalMetaDiscription(faq.metaDiscription)
+    setModalMetaKeywords(faq.metaKeywords)
+    setCurrentFaqId(faq._id)
+    setShowModal(true)
+  }
 
+  const handleCloseModal = () => setShowModal(false)
 
+  const handleUpdate = async (e) => {
+    e.preventDefault()
 
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) {
+        console.error('Token not found')
+        return
+      }
 
+      const updatedData = {
+        question: modalQuestion,
+        answer: modalAnswer,
+        metaTitle: modalMetaTitle,
+        metaDescription: modalMetaDiscription,
+        metaKeywords: modalMetaKeywords,
+      }
 
+      const res = await axios.put(
+        `${import.meta.env.VITE_BASE_URL}/admin/editBlog/${currentFaqId}`,
+        updatedData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      )
 
-
-
-
-
-
-
-
-
-
+      // Fetch FAQs again after updating
+      fetchFaqs()
+      setMessage('Blog post updated successfully!')
+      handleCloseModal()
+    } catch (err) {
+      console.error(err)
+      setMessage('Error updating blog post')
+    }
+  }
 
   const handleDelete = async (id) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token')
       if (!token) {
-        console.error('Token not found');
-        return;
+        console.error('Token not found')
+        return
       }
 
       await axios.delete(`${import.meta.env.VITE_BASE_URL}/admin/delete-blog/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
-      console.log('Deleted card');
+      })
+      console.log('Deleted card')
 
       // Update the FAQs state to remove the deleted FAQ
-      setFaqs((prevFaqs) => prevFaqs.filter((faq) => faq._id !== id));
-      setMessage('FAQ deleted successfully');
+      setFaqs((prevFaqs) => prevFaqs.filter((faq) => faq._id !== id))
+      setMessage('FAQ deleted successfully')
     } catch (err) {
-      console.error('Error deleting FAQ:', err);
-      setMessage('Error deleting FAQ');
+      console.error('Error deleting FAQ:', err)
+      setMessage('Error deleting FAQ')
     }
-  };
+  }
 
   return (
     <>
@@ -245,19 +219,25 @@ const handleUpdate = async (e) => {
                   onChange={(e) => setQuestion(e.target.value)}
                   required
                 />
-                {formErrors.question && <div className="invalid-feedback">{formErrors.question}</div>}
+                {formErrors.question && (
+                  <div className="invalid-feedback">{formErrors.question}</div>
+                )}
               </div>
 
-              <div className="form-group mt-3">
-                <label htmlFor="answer">Blog Description:</label>
-                <textarea
-                  className={`form-control ${formErrors.answer ? 'is-invalid' : ''}`}
-                  id="answer"
-                  name="answer"
+              <div className="mt-3">
+                <label htmlFor="description" className="form-label">
+                  Blog Description:
+                </label>
+                <MarkdownEditor
                   value={answer}
-                  onChange={(e) => setAnswer(e.target.value)}
-                  required
-                ></textarea>
+                  onChange={(value) => setAnswer(value)}
+                  height={400}
+                  className="z-10"
+                />
+              </div>
+              <div>
+                {/* <Markdown>{answer}</Markdown> */}
+
                 {formErrors.answer && <div className="invalid-feedback">{formErrors.answer}</div>}
 
                 <div>
@@ -288,7 +268,9 @@ const handleUpdate = async (e) => {
                   onChange={(e) => setMetaTitle(e.target.value)}
                   required
                 />
-                {formErrors.metaTitle && <div className="invalid-feedback">{formErrors.metaTitle}</div>}
+                {formErrors.metaTitle && (
+                  <div className="invalid-feedback">{formErrors.metaTitle}</div>
+                )}
               </div>
 
               <div className="form-group mt-3">
@@ -301,7 +283,9 @@ const handleUpdate = async (e) => {
                   onChange={(e) => setMetaDiscription(e.target.value)}
                   required
                 ></textarea>
-                {formErrors.metaDiscription && <div className="invalid-feedback">{formErrors.metaDiscription}</div>}
+                {formErrors.metaDiscription && (
+                  <div className="invalid-feedback">{formErrors.metaDiscription}</div>
+                )}
               </div>
 
               <div className="form-group mt-3">
@@ -315,7 +299,9 @@ const handleUpdate = async (e) => {
                   onChange={(e) => setMetaKeywords(e.target.value)}
                   required
                 />
-                {formErrors.metaKeywords && <div className="invalid-feedback">{formErrors.metaKeywords}</div>}
+                {formErrors.metaKeywords && (
+                  <div className="invalid-feedback">{formErrors.metaKeywords}</div>
+                )}
               </div>
 
               <div className="mt-5">
@@ -366,8 +352,8 @@ const handleUpdate = async (e) => {
           </div>
         </div>
       </div>
-         {/* Modal for editing blog post */}
-         <Modal show={showModal} onHide={handleCloseModal}>
+      {/* Modal for editing blog post */}
+      <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>Edit Blog Post</Modal.Title>
         </Modal.Header>
@@ -386,14 +372,15 @@ const handleUpdate = async (e) => {
               {formErrors.question && <div className="invalid-feedback">{formErrors.question}</div>}
             </div>
 
-            <div className="form-group mt-3">
-              <label htmlFor="modalAnswer">Blog Description:</label>
-              <textarea
-                className="form-control"
-                id="modalAnswer"
+            <div className="mb-3">
+              <label htmlFor="description" className="form-label">
+                Blog Description:
+              </label>
+              <MarkdownEditor
                 value={modalAnswer}
-                onChange={(e) => setModalAnswer(e.target.value)}
-                required
+                onChange={(e) => setAnswer(e.target.value)}
+                height={400}
+                className="z-10"
               />
               {formErrors.answer && <div className="invalid-feedback">{formErrors.answer}</div>}
             </div>
@@ -440,7 +427,7 @@ const handleUpdate = async (e) => {
         </Modal.Body>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default FAQs;
+export default FAQs
