@@ -89,7 +89,7 @@ const FAQs = () => {
 
       const formData = new FormData()
       formData.append('question', question)
-      formData.append('answer', description)
+      formData.append('answer', answer)
       formData.append('metaTitle', metaTitle)
       formData.append('metaDiscription', metaDiscription)
       formData.append('metaKeywords', metaKeywords)
@@ -225,7 +225,7 @@ const FAQs = () => {
               </div>
 
               <div className="mt-3">
-                <label htmlFor="description" className="form-label">
+                <label htmlFor="answer" className="form-label">
                   Blog Description:
                 </label>
                 <MarkdownEditor
@@ -373,7 +373,7 @@ const FAQs = () => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="description" className="form-label">
+              <label htmlFor="answer" className="form-label">
                 Blog Description:
               </label>
               <MarkdownEditor
