@@ -4,6 +4,7 @@ import { AppSidebar, AppHeader } from '../../../components/index'
 import { Modal, Button } from 'react-bootstrap'
 import MarkdownEditor from '@uiw/react-markdown-editor'
 import Markdown from 'markdown-to-jsx'
+import ReactDOMServer from 'react-dom/server'
 
 const baseUrl = 'http://localhost:4000'
 
@@ -60,6 +61,16 @@ const FAQs = () => {
     }
   }
 
+  const handleMarkdownChange = (answer) => {
+    setAnswer(answer)
+  }
+
+  const convertMarkdownToString = (markdownText) => {
+    const jsxElement = <Markdown>{markdownText}</Markdown>
+    const jsxString = ReactDOMServer.renderToStaticMarkup(jsxElement)
+    return jsxString
+  }
+
   // Form validation logic
   const validateForm = () => {
     const errors = {}
@@ -86,10 +97,11 @@ const FAQs = () => {
         console.error('Token not found')
         return
       }
+      const editedAnswer = await convertMarkdownToString(answer)
 
       const formData = new FormData()
       formData.append('question', question)
-      formData.append('answer', answer)
+      formData.append('answer', editedAnswer)
       formData.append('metaTitle', metaTitle)
       formData.append('metaDiscription', metaDiscription)
       formData.append('metaKeywords', metaKeywords)
@@ -103,6 +115,7 @@ const FAQs = () => {
           'Content-Type': 'multipart/form-data',
         },
       })
+      console.log(res, 'res')
 
       // Reset form fields after successful submission
       setQuestion('')
@@ -230,14 +243,12 @@ const FAQs = () => {
                 </label>
                 <MarkdownEditor
                   value={answer}
-                  onChange={(value) => setAnswer(value)}
+                  onChange={(value) => handleMarkdownChange(value)}
                   height={400}
                   className="z-10"
                 />
               </div>
               <div>
-                {/* <Markdown>{answer}</Markdown> */}
-
                 {formErrors.answer && <div className="invalid-feedback">{formErrors.answer}</div>}
 
                 <div>
