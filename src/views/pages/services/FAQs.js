@@ -65,6 +65,7 @@ const FAQs = () => {
     if (!metaTitle.trim()) errors.metaTitle = 'Meta title is required';
     if (!metaDiscription.trim()) errors.metaDiscription = 'Meta description is required';
     if (!metaKeywords.trim()) errors.metaKeywords = 'Meta keywords are required';
+    if (!thumbnail) errors.thumbnail = 'Thumbnail image is required';
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -263,16 +264,18 @@ const handleUpdate = async (e) => {
                 <div>
                   <label className="form-label mt-3">Select Thumbnail Image</label>
                   <input
-                    className="form-control"
+                     className={`form-control ${formErrors.thumbnail ? 'is-invalid' : ''}`}
                     type="file"
                     name="thumbnail"
                     onChange={onThumbnailChange}
                   />
+                  
                   {!thumbnail && (
                     <small className="form-text text-muted">
                       Please select a thumbnail image to upload
                     </small>
                   )}
+                   {formErrors.thumbnail && <div className="invalid-feedback">{formErrors.thumbnail}</div>}
                 </div>
               </div>
 
