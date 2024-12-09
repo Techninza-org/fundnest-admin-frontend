@@ -51,7 +51,7 @@ const Dashboard = () => {
         setBookingCount(res.data.length)
       }
       async function getWebinars() {
-        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/videos/upload`, {
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/videos/get-uploads`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -67,7 +67,7 @@ const Dashboard = () => {
         setWebinarBookingCount(res.data.length)
       }
       async function getFAQs() {
-        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/faqs`, {
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/blog`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -117,9 +117,9 @@ const Dashboard = () => {
         </CCardBody>
       </CCard>
       <CCard textBgColor={'secondary'} className="mb-3 col-md-6" style={{ maxWidth: '18rem' }}>
-        <CCardHeader>FAQs</CCardHeader>
+        <CCardHeader>Blogs</CCardHeader>
         <CCardBody>
-          <CCardTitle>FAQs: {faqsCount} </CCardTitle>
+          <CCardTitle>Blogs: {faqsCount} </CCardTitle>
         </CCardBody>
       </CCard>
     </div>
